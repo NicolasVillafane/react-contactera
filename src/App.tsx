@@ -1,10 +1,10 @@
-import UserBar from './components/UserBar';
+import AddContact from './components/AddContact';
 import ContactList from './components/ContactList';
 
 function App() {
   return (
     <div>
-      <UserBar /> <ContactList />
+      <ContactList /> <AddContact />
     </div>
   );
 }
