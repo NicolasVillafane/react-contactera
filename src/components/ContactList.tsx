@@ -4,14 +4,22 @@ import {
   AppBar,
   Box,
   Toolbar,
-  IconButton,
   Typography,
   InputBase,
   Avatar,
   Button,
+  Stack,
+  Paper,
+  Modal,
+  Fade,
+  Backdrop,
+  TextField,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import AddContact from './AddContact';
+import * as React from 'react';
+
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -55,44 +63,138 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function ContactList() {
-  return (
-    // <Box>
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
-    //   <h4>Nicolas Villafane</h4>
-    //   <Button variant="contained">Log Out</Button>
-    // </Box>
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Avatar
-            sx={{ mr: 2 }}
-            alt="Remy Sharp"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-          />
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+function ContactList() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return (
+    <div>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" style={{ background: '#311b92' }}>
+          <Toolbar>
+            <Avatar
+              sx={{ mr: 2 }}
+              alt="Remy Sharp"
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            >
+              Nicolas Villafane
+            </Typography>
+            <Button onClick={handleOpen} variant="contained" color="success">
+              <AddIcon />
+            </Button>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+            <Button variant="contained" color="error" sx={{ ml: 2 }}>
+              Log Out
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Stack spacing={2} sx={{ mt: 2 }}>
           <Typography
-            variant="h6"
+            variant="h2"
             noWrap
+            textAlign="center"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Nicolas Villafane
+            CONTACTS
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+          <Item>
+            <Button>Alejandro Villafane</Button>
+          </Item>
+          <Item>
+            <Button>Laura Lamberti</Button>
+          </Item>
+          <Item>
+            <Button>Homero Simpson</Button>
+          </Item>
+        </Stack>
+      </Box>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <TextField
+              sx={{ mt: 2 }}
+              id="outlined-basic"
+              label="Name"
+              variant="outlined"
             />
-          </Search>
-          <Button color="inherit" sx={{ ml: 2 }}>
-            Log Out
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+            <TextField
+              sx={{ mt: 2 }}
+              id="outlined-basic"
+              label="Surname"
+              variant="outlined"
+            />
+            <TextField
+              sx={{ mt: 2 }}
+              id="outlined-basic"
+              label="Age"
+              variant="outlined"
+            />
+            <TextField
+              sx={{ mt: 2 }}
+              id="outlined-basic"
+              label="Mail"
+              variant="outlined"
+            />
+            <TextField
+              sx={{ mt: 2 }}
+              id="outlined-basic"
+              label="Adress"
+              variant="outlined"
+            />
+            <Button sx={{ ml: 2 }} variant="contained" color="success">
+              Submit
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
+    </div>
   );
 }
 
