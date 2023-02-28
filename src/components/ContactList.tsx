@@ -88,6 +88,24 @@ function ContactList() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [backendData, setBackendData] = React.useState([{}]);
+
+  const contacts = backendData.map((contact: any) => (
+    <Item>
+      <Button>
+        {contact.name} {contact.surname}
+      </Button>
+    </Item>
+  ));
+
+  React.useEffect(() => {
+    fetch('/contacts')
+      .then((response) => response.json())
+      .then((data) => {
+        setBackendData(data);
+      });
+  }, []);
+
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
@@ -133,15 +151,7 @@ function ContactList() {
           >
             CONTACTS
           </Typography>
-          <Item>
-            <Button>Alejandro Villafane</Button>
-          </Item>
-          <Item>
-            <Button>Laura Lamberti</Button>
-          </Item>
-          <Item>
-            <Button>Homero Simpson</Button>
-          </Item>
+          {contacts}
         </Stack>
       </Box>
 
