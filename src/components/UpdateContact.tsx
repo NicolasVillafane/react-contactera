@@ -1,38 +1,76 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-function AddContact() {
+function UpdateContact() {
+  const { id } = useParams();
+
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [nickname, setNickname] = useState('');
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const [dayB, setDay] = useState('');
+  const [monthB, setMonth] = useState('');
+  const [yearB, setYear] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [adress, setAdress] = useState('');
 
+  const navigate = useNavigate();
+
   const handleClick = async () => {
-    let result = await fetch('/contacts', {
-      method: 'post',
+    let today: Date | string = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+
+    let age = yyyy - Number(yearB);
+    if (mm <= monthB || dd < dayB) {
+      age -= 1;
+    }
+
+    let result = await fetch(`/contacts/${id}`, {
+      method: 'put',
       body: JSON.stringify({
-        name: name,
-        surname: surname,
-        nickname: nickname,
-        email: email,
-        dayB: day,
-        monthB: month,
-        yearB: year,
-        phoneNumber: phone,
-        adress: adress,
+        name,
+        surname,
+        nickname,
+        dayB,
+        monthB,
+        yearB,
+        email,
+        bornDate: `${dayB}/${monthB}/${yearB}`,
+        age,
+        phone,
+        adress,
       }),
       headers: { 'content-type': 'application/json' },
     });
     result = await result.json();
+    if (result) {
+      navigate(`/contacts/${id}`);
+    }
+  };
+
+  useEffect(() => {
+    getContactDetails();
+  }, []);
+
+  const getContactDetails = async () => {
+    let result: any = await fetch(`/contacts/${id}`);
+    result = await result.json();
+    setName(result.name);
+    setSurname(result.surname);
+    setNickname(result.nickname);
+    setDay(result.dayB);
+    setMonth(result.monthB);
+    setYear(result.yearB);
+    setEmail(result.email);
+    setPhone(result.phoneNumber);
+    setAdress(result.adress);
   };
 
   return (
     <div>
-      <h1>Add a Contact</h1>
+      <h1>Update a Contact</h1>
       <input
         value={name}
         type="text"
@@ -66,7 +104,7 @@ function AddContact() {
         }}
       ></input>
       <input
-        value={day}
+        value={dayB}
         type="number"
         placeholder="day"
         onChange={(e) => {
@@ -74,7 +112,7 @@ function AddContact() {
         }}
       ></input>
       <input
-        value={month}
+        value={monthB}
         type="number"
         placeholder="month"
         onChange={(e) => {
@@ -82,7 +120,7 @@ function AddContact() {
         }}
       ></input>
       <input
-        value={year}
+        value={yearB}
         type="number"
         placeholder="year"
         onChange={(e) => {
@@ -106,9 +144,9 @@ function AddContact() {
           setAdress(e.target.value);
         }}
       ></input>
-      <button onClick={handleClick}>Add Contact</button>
+      <button onClick={handleClick}>Update Product</button>
     </div>
   );
 }
 
-export default AddContact;
+export default UpdateContact;
