@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, redirect } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function ShowContact() {
   let { id } = useParams();

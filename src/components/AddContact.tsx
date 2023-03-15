@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AddContact() {
   const [name, setName] = useState('');
@@ -10,6 +11,8 @@ function AddContact() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [adress, setAdress] = useState('');
+
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     let result = await fetch('/contacts', {
@@ -28,6 +31,9 @@ function AddContact() {
       headers: { 'content-type': 'application/json' },
     });
     result = await result.json();
+    if (result) {
+      navigate(`/contacts`);
+    }
   };
 
   return (
